@@ -39,7 +39,7 @@ module.exports = {
 			},
 			{
 				test:/\.less$/,
-				loader: ['less-loader','css-loader','style-loader'],
+				loader: ['style-loader','css-loader','less-loader'],//注意顺序style css最后才是Less不然会报错
 			}
 		]
 	},
