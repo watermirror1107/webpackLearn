@@ -1,8 +1,11 @@
-//const webpack=require('webpack');
+const webpack=require('webpack');
 const path = require('path');
 //extract-text-webpack-plugin插件可以吧打包在js里面的css抽出来单独引用
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
-
+//页面模板哈希值引入插件
+const HtmlWebpackPlugin=require('html-webpack-plugin');
+//清除多余哈希值打包出来的文件
+const cleanWebpack=require('clean-webpack-plugin');
 function resolve(dir) {
     return path.join(__dirname, '..', dir);
 }
@@ -15,7 +18,7 @@ module.exports = {
     entry: __dirname + '/app/main.js',
     output: {
         path: __dirname + '/dist',
-        filename: 'bundle.js',
+        filename: 'bundle-[hash].js',
     },
     //webpack的服务器
     devServer: {
@@ -55,6 +58,13 @@ module.exports = {
     },
     //插件
     plugins: [
-        new ExtractTextPlugin({filename: "style.css"}),
+        new ExtractTextPlugin({filename: "style.css"}),//把css拿出来单独引入
+        new webpack.BannerPlugin('头皮发麻'),//在打包后的js头部加入注释
+        new HtmlWebpackPlugin({
+            template: __dirname + "/public/index.html" //new 一个这个插件的实例，并传入相关的参数
+        }),
+        new webpack.optimize.OccurrenceOrderPlugin(),//为组件分配ID，通过这个插件webpack可以分析和优先考虑使用最多的模块，并为它们分配最小的ID
+        //new webpack.optimize.minimize()//压缩JS代码；
+        //new webpack.HotModuleReplacementPlugin() //热加载插件,上面webpack-dev-server里面已经开启了热更
     ]
 };
