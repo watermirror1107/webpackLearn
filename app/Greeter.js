@@ -5,7 +5,7 @@ function f() {
 	a()
 }
 let a=()=>{
-	console.log('arrow')
+	console.log('arrow1')
 };
 module.exports=f;
 
