@@ -17,10 +17,13 @@ module.exports = {
 	mode: 'production',//process.env.NODE_ENV === 'production'
 	//调试工具
 	devtool: 'eval-source-map',
-	entry: __dirname + '/app/main.js',//单页面入口
+	entry: {
+		'pageOne':__dirname + '/app/main.js',
+		'pageTwo':__dirname + '/app/main2.js'
+	},//多页面入口
 	output: {
-		path: __dirname + '/dist',
-		filename: 'bundle-[hash].js',
+		path: __dirname + '/dist',//多入口打包的时候不想把多个文件打包成一个，就需要占位符，有name,hash,chunkhash,chunkhash类似于版本hash，如果这个文件没有改动打包的时候chunkhash是不会变化的；
+		filename: '[name]-[hash].js',
 	},
 	//webpack的服务器
 	devServer: {
@@ -67,13 +70,27 @@ module.exports = {
 			allChunks: true,
 		}),//把css拿出来单独引入
 		new webpack.BannerPlugin('头皮发麻'),//在打包后的js头部加入注释
+		//如果是多入口单页面输出只要一个htmlwebapckplugin就够了
+		new HtmlWebpackPlugin({   //new 一个这个插件的实例，并传入相关的参数
+			template: __dirname + '/public/index.html', //生成页面时候需要的模板页面
+			minify: {
+				removeComments: true,//移除注释
+				collapseWhitespace: true,//移除多余空格
+				removeAttributeQuotes: true,//删除属性双引号
+			},
+			filename:'pageOne.html',//生成页面名
+			chunks:['pageOne']//入口分支名，和entry里面的一致,当需要多个入口打包生成不同页面的时候就需要用到这个属性
+		}),
+		//多入口多页面输出
 		new HtmlWebpackPlugin({
-			template: __dirname + '/public/index.html', //new 一个这个插件的实例，并传入相关的参数
+			template: __dirname + '/public/index.html',
 			minify: {
 				removeComments: true,
 				collapseWhitespace: true,
 				removeAttributeQuotes: true,
 			},
+			filename:'pageTwo.html',//生成页面名
+			chunks:['pageTwo']
 		}),
 		new CleanWebpackPlugin('dist/*.*', {
 			root: __dirname,
