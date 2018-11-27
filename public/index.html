@@ -5,9 +5,18 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>tpfm</title>
+    <title><%= htmlWebpackPlugin.options.title %></title>
 </head>
 <body>
 <p>dsfasa</p>
+<p><%= htmlWebpackPlugin.options.blueTeeth %></p>
+<!--如果是运行某个JS就不需要用到等号-->
+<% for (var key in htmlWebpackPlugin.files){ %>
+<p><%= key %>:<%= JSON.stringify(htmlWebpackPlugin.files[key]) %></p>
+<% } %>
+<!--输出配置-->
+<% for (var key in htmlWebpackPlugin.options){ %>
+<p><%= key %>:<%= JSON.stringify(htmlWebpackPlugin.options[key]) %></p>
+<% } %>
 </body>
 </html>

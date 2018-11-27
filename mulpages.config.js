@@ -22,8 +22,10 @@ module.exports = {
 		'pageTwo':__dirname + '/app/main2.js'
 	},//多页面入口
 	output: {
-		path: __dirname + '/dist',//多入口打包的时候不想把多个文件打包成一个，就需要占位符，有name,hash,chunkhash,chunkhash类似于版本hash，如果这个文件没有改动打包的时候chunkhash是不会变化的；
-		filename: '[name]-[hash].js',
+		path: __dirname + '/dist',//输出目录
+		//前面加JS就会生成一个JS文件夹来放JS
+		filename: 'js/[name]-[hash].js',//多入口打包的时候不想把多个文件打包成一个，就需要占位符，有name,hash,chunkhash,chunkhash类似于版本hash，如果这个文件没有改动打包的时候chunkhash是不会变化的；
+		//publicPath:''//给引用的这写文件加上绝对路径，比如CDN加速之类的
 	},
 	//webpack的服务器
 	devServer: {
@@ -66,7 +68,7 @@ module.exports = {
 	//插件
 	plugins: [
 		new ExtractTextPlugin({
-			filename: 'style.css',
+			filename: 'css/style.css',
 			allChunks: true,
 		}),//把css拿出来单独引入
 		new webpack.BannerPlugin('头皮发麻'),//在打包后的js头部加入注释
@@ -78,21 +80,25 @@ module.exports = {
 				collapseWhitespace: true,//移除多余空格
 				removeAttributeQuotes: true,//删除属性双引号
 			},
+			inject:'head',//把JS放进head标签里面,可选择自己先要放入的位置，注意引用顺序
+			title:'webpack is best!',//随便定义想要传递给模板页面的参数
+			blueTeeth:'蓝牙',
 			filename:'pageOne.html',//生成页面名
 			chunks:['pageOne']//入口分支名，和entry里面的一致,当需要多个入口打包生成不同页面的时候就需要用到这个属性
 		}),
-		//多入口多页面输出
+		//多入口多页面输出，可以同一个模板也可以不同模板
 		new HtmlWebpackPlugin({
 			template: __dirname + '/public/index.html',
+			inject:'body',
 			minify: {
 				removeComments: true,
 				collapseWhitespace: true,
 				removeAttributeQuotes: true,
 			},
-			filename:'pageTwo.html',//生成页面名
+			filename:'pageTwo-[hash].html',//生成页面名
 			chunks:['pageTwo']
 		}),
-		new CleanWebpackPlugin('dist/*.*', {
+		new CleanWebpackPlugin('dist', { //删除之前打包的dist下面的所有文件
 			root: __dirname,
 			verbose: true,
 			dry: false,

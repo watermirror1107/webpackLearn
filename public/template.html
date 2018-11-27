@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <!--不想把script通过外链引入可以这么写-->
+    <!--下面是对chunk:first的js入口文件以行内的形式写入页面，而不是外链引入，可以提高这个脚本的加载速度和运行速度-->
+    <script type="text/javascript">
+			<%=
+				compilation.assets[htmlWebpackPlugin.files.chunks.first.entry.substr(htmlWebpackPlugin.files.publicPath.length)].source()
+              %>
+    </script>
+</head>
+<body>
+<!--排除上面以-->
+<% for(var k in htmlWebpackPlugin.files.chunks){ %>
+<% if(k!=='first'){ %>
+<script src="<% htmlWebpackPlugin.files.chunks[k].entry %>"></script>
+<% } %>
+<% } %>
+
+</body>
+</html>

@@ -6,6 +6,7 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 //清除多余哈希值打包出来的文件
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+
 //optimize-css-assets-webpack-plugin压缩css
 
 function resolve(dir) {
@@ -14,13 +15,17 @@ function resolve(dir) {
 
 module.exports = {
 	//环境
-	mode: 'production',//process.env.NODE_ENV === 'production'
+	//mode: 'production',//process.env.NODE_ENV === 'production'
 	//调试工具
 	devtool: 'eval-source-map',
-	entry: __dirname + '/app/main.js',//单页面入口
+	entry: {
+		first: __dirname + '/app/main.js',
+		second: __dirname + '/app/main2.js',
+		third: __dirname + '/app/main3.js',
+	},//入口
 	output: {
 		path: __dirname + '/dist',
-		filename: 'bundle-[hash].js',
+		filename: 'js/bundle-[hash].js',
 	},
 	//webpack的服务器
 	devServer: {
@@ -63,19 +68,20 @@ module.exports = {
 	//插件
 	plugins: [
 		new ExtractTextPlugin({
-			filename: 'style.css',
+			filename: 'css/style.css',
 			allChunks: true,
-		}),//把css拿出来单独引入
+		}),//把css拿出来单独引入,不然CSS就会被写入头部的style标签里面
 		new webpack.BannerPlugin('头皮发麻'),//在打包后的js头部加入注释
 		new HtmlWebpackPlugin({
-			template: __dirname + '/public/index.html', //new 一个这个插件的实例，并传入相关的参数
+			template: __dirname + '/public/template.html',
 			minify: {
 				removeComments: true,
 				collapseWhitespace: true,
 				removeAttributeQuotes: true,
 			},
+			excludeChunks:['main3'],//如果有多个入口又不想全部引入就用这个排除某个chunks
 		}),
-		new CleanWebpackPlugin('dist/*.*', {
+		new CleanWebpackPlugin('dist', {
 			root: __dirname,
 			verbose: true,
 			dry: false,
