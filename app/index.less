@@ -1,4 +1,7 @@
+@import "public";
+//在样式里面引入别的css样式的时候要在webpack，css-loader开启importLoaders,不然引入的public的样式，不会被postcss处理，就不会有前缀,如果引用的less,sass就不需要
 @mainTheme:green;
+@fz:20px;
 *{
   padding: 0;
   margin: 0;
@@ -8,7 +11,10 @@ body{
   height: 100vh;
   background:linear-gradient(red, blue);
   p{
-    font-size: 21px;
+    font-size: @fz;
     color: #333333;
+  }
+  .title{
+    font-size: 40px;
   }
 }

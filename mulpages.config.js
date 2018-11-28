@@ -48,16 +48,16 @@ module.exports = {
 				// query: {
 				// 	presets: ['env'],
 				// },
-				exclude: /node_modules/, //屏蔽插件里面的编译，当然有时候插件里面也可能会有ES6，有时候需要对个别插件包编译一下
+				exclude:  path.resolve(__dirname,'node_modules'), //路径必须是绝对路径,(includes里面也必须是绝对路径)屏蔽插件里面的编译，当然有时候插件里面也可能会有ES6，有时候需要对个别插件包编译一下
 				//include: [resolve('src'), resolve('node_modules/swiper'), resolve('node_modules/dom7')],
 			},
 			{
 				test: /\.less$/,
 				loader: ExtractTextPlugin.extract({
 					fallback: 'style-loader',
-					use: 'css-loader!postcss-loader!less-loader',
+					use: 'css-loader?importLoaders=1!postcss-loader!less-loader',
 				}),
-				exclude: /node_modules/,
+				exclude: path.resolve(__dirname,'node_modules'),
 				// loader: 'style-loader!css-loader?modules!less-loader!postcss-loader',//简写
 				// !感叹号是分割符，表示两个工具都参与处理。
 				// ?问号，其实跟url的问号一样，就是后面要跟参数的意思。

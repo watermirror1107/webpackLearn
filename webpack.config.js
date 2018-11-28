@@ -15,7 +15,7 @@ function resolve(dir) {
 
 module.exports = {
 	//环境
-	//mode: 'production',//process.env.NODE_ENV === 'production'
+	mode: 'production',//process.env.NODE_ENV === 'production'
 	//调试工具
 	devtool: 'eval-source-map',
 	entry: {
@@ -25,7 +25,8 @@ module.exports = {
 	},//入口
 	output: {
 		path: __dirname + '/dist',
-		filename: 'js/bundle-[hash].js',
+		filename: 'js/[name]-[hash].js',
+		publicPath: '',
 	},
 	//webpack的服务器
 	devServer: {
@@ -45,24 +46,29 @@ module.exports = {
 			{
 				test: /(\.jsx|\.js)$/,
 				loader: 'babel-loader',
-				// query: {
-				// 	presets: ['env'],
+				// query: {             //query也可以在.babelrc里面配置或者在package.json里面配置，一共三个地方可配置
+				// 	presets: ['latest'],//需要安装最新的ES编译插件babel-preset-latest
 				// },
-				exclude: /node_modules/, //屏蔽插件里面的编译，当然有时候插件里面也可能会有ES6，有时候需要对个别插件包编译一下
+				exclude: path.resolve(__dirname,'node_modules'), //路径必须是绝对路径,(includes里面也必须是绝对路径)屏蔽插件里面的编译，当然有时候插件里面也可能会有ES6，有时候需要对个别插件包编译一下,用以下的includes
 				//include: [resolve('src'), resolve('node_modules/swiper'), resolve('node_modules/dom7')],
 			},
 			{
 				test: /\.less$/,
 				loader: ExtractTextPlugin.extract({
 					fallback: 'style-loader',
-					use: 'css-loader!postcss-loader!less-loader',
+					use: 'css-loader!postcss-loader!less-loader',//postcss-loader是给浏览器兼容的样式加前缀，?importLoaders=1y因为处理的是less所以不需要给css-loader加上?importLoaders=1参数
 				}),
-				exclude: /node_modules/,
+				exclude: path.resolve(__dirname,'node_modules'),
 				// loader: 'style-loader!css-loader?modules!less-loader!postcss-loader',//简写
 				// !感叹号是分割符，表示两个工具都参与处理。
 				// ?问号，其实跟url的问号一样，就是后面要跟参数的意思。
 				//注意顺序style css最后才是Less不然会报错
 			},
+			{
+				test:/\.html$/,
+				loader:'html-loader',
+				exclude:path.resolve(__dirname,'public')
+			}
 		],
 	},
 	//插件
@@ -73,13 +79,14 @@ module.exports = {
 		}),//把css拿出来单独引入,不然CSS就会被写入头部的style标签里面
 		new webpack.BannerPlugin('头皮发麻'),//在打包后的js头部加入注释
 		new HtmlWebpackPlugin({
+			inject:false,
 			template: __dirname + '/public/template.html',
 			minify: {
 				removeComments: true,
 				collapseWhitespace: true,
 				removeAttributeQuotes: true,
 			},
-			excludeChunks:['main3'],//如果有多个入口又不想全部引入就用这个排除某个chunks
+			excludeChunks:['third'],//如果有多个入口又不想全部引入就用这个排除某个chunks
 		}),
 		new CleanWebpackPlugin('dist', {
 			root: __dirname,
