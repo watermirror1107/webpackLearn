@@ -45,7 +45,7 @@ module.exports = {
 		rules: [
 			{
 				test: /(\.jsx|\.js)$/,
-				loader: 'babel-loader',
+				loader: 'cache-loader!babel-loader',//这里可以使用loaders后面接一个数组，cache-loader是用来提高打包速度的，让bebel-loader的处理结果保存到缓存里面，下次直接去读取cache里面即可,第一次打包可能会比较久
 				// query: {             //query也可以在.babelrc里面配置或者在package.json里面配置，一共三个地方可配置
 				// 	presets: ['latest'],//需要安装最新的ES编译插件babel-preset-latest
 				// },
