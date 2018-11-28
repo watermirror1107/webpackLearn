@@ -59,15 +59,23 @@ module.exports = {
 					use: 'css-loader!postcss-loader!less-loader',//postcss-loader是给浏览器兼容的样式加前缀，?importLoaders=1y因为处理的是less所以不需要给css-loader加上?importLoaders=1参数
 				}),
 				exclude: path.resolve(__dirname,'node_modules'),
-				// loader: 'style-loader!css-loader?modules!less-loader!postcss-loader',//简写
+				// loader: 'style-loader!css-loader?modules=true!less-loader!postcss-loader',//简写
 				// !感叹号是分割符，表示两个工具都参与处理。
-				// ?问号，其实跟url的问号一样，就是后面要跟参数的意思。
+				// ?问号，其实跟url的问号一样，就是后面要跟参数的意思,也可以吧参数放在query里面，但是这样的话只能一个给当前这个loader加参数
 				//注意顺序style css最后才是Less不然会报错
 			},
 			{
 				test:/\.html$/,
-				loader:'html-loader',
+				loader:'html-loader',//模板loader
 				exclude:path.resolve(__dirname,'public')
+			},
+			{
+				test:/\.(jpg|png|gif|svg)$/i,
+				loader:'url-loader?name=assets/[name]-[hash:5].[ext]&limit=20000!image-webpack-loader',        //这里可以用image-webpack-loader压缩图片,url-loader可以吧大小在Limit范围之内的图片变成base64减少http请求
+				// query: {
+				// 	limit:'20000',
+				// 	name:''
+				// },
 			}
 		],
 	},
