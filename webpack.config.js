@@ -1,7 +1,10 @@
 const webpack = require('webpack');
 const path = require('path');
 //extract-text-webpack-plugin插件可以吧打包在js里面的css抽出来单独引用
+//mini-css-extract-plugin是extract-text-webpack-plugin升级版
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+//压缩css用于webpack4以上版本
+var OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 //页面模板哈希值引入插件
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 //清除多余哈希值打包出来的文件
@@ -49,7 +52,7 @@ module.exports = {
 				// query: {             //query也可以在.babelrc里面配置或者在package.json里面配置，一共三个地方可配置
 				// 	presets: ['latest'],//需要安装最新的ES编译插件babel-preset-latest
 				// },
-				exclude: path.resolve(__dirname,'node_modules'), //路径必须是绝对路径,(includes里面也必须是绝对路径)屏蔽插件里面的编译，当然有时候插件里面也可能会有ES6，有时候需要对个别插件包编译一下,用以下的includes
+				exclude: path.resolve(__dirname, 'node_modules'), //路径必须是绝对路径,(includes里面也必须是绝对路径)屏蔽插件里面的编译，当然有时候插件里面也可能会有ES6，有时候需要对个别插件包编译一下,用以下的includes
 				//include: [resolve('src'), resolve('node_modules/swiper'), resolve('node_modules/dom7')],
 			},
 			{
@@ -58,25 +61,25 @@ module.exports = {
 					fallback: 'style-loader',
 					use: 'css-loader!postcss-loader!less-loader',//postcss-loader是给浏览器兼容的样式加前缀，?importLoaders=1y因为处理的是less所以不需要给css-loader加上?importLoaders=1参数
 				}),
-				exclude: path.resolve(__dirname,'node_modules'),
+				exclude: path.resolve(__dirname, 'node_modules'),
 				// loader: 'style-loader!css-loader?modules=true!less-loader!postcss-loader',//简写
 				// !感叹号是分割符，表示两个工具都参与处理。
 				// ?问号，其实跟url的问号一样，就是后面要跟参数的意思,也可以吧参数放在query里面，但是这样的话只能一个给当前这个loader加参数
 				//注意顺序style css最后才是Less不然会报错
 			},
 			{
-				test:/\.html$/,
-				loader:'html-loader',//模板loader
-				exclude:path.resolve(__dirname,'public')
+				test: /\.html$/,
+				loader: 'html-loader',//模板loader
+				exclude: path.resolve(__dirname, 'public'),
 			},
 			{
-				test:/\.(jpg|png|gif|svg)$/i,
-				loader:'url-loader?name=assets/[name]-[hash:5].[ext]&limit=20000!image-webpack-loader',        //这里可以用image-webpack-loader压缩图片,url-loader可以吧大小在Limit范围之内的图片变成base64减少http请求
+				test: /\.(jpg|png|gif|svg)$/i,
+				loader: 'url-loader?name=assets/[name]-[hash:5].[ext]&limit=20000!image-webpack-loader',        //这里可以用image-webpack-loader压缩图片,url-loader可以吧大小在Limit范围之内的图片变成base64减少http请求
 				// query: {
 				// 	limit:'20000',
 				// 	name:''
 				// },
-			}
+			},
 		],
 	},
 	//插件
@@ -85,16 +88,22 @@ module.exports = {
 			filename: 'css/style.css',
 			allChunks: true,
 		}),//把css拿出来单独引入,不然CSS就会被写入头部的style标签里面
+		new OptimizeCssAssetsPlugin({ //压缩CSS
+			assetNameRegExp: /\.css$/g,
+			cssProcessor: require('cssnano'),
+			cssProcessorOptions: {safe: true, discardComments: {removeAll: true}},
+			canPrint: true,
+		}),
 		new webpack.BannerPlugin('头皮发麻'),//在打包后的js头部加入注释
 		new HtmlWebpackPlugin({
-			inject:false,
+			inject: false,
 			template: __dirname + '/public/template.html',
 			minify: {
 				removeComments: true,
 				collapseWhitespace: true,
 				removeAttributeQuotes: true,
 			},
-			excludeChunks:['third'],//如果有多个入口又不想全部引入就用这个排除某个chunks
+			excludeChunks: ['third'],//如果有多个入口又不想全部引入就用这个排除某个chunks
 		}),
 		new CleanWebpackPlugin('dist', {
 			root: __dirname,
