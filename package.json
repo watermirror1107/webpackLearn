@@ -1,4 +1,4 @@
-{
+ {
   "name": "webpacktest",
   "version": "1.0.0",
   "description": "",
@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "webpack",
-    "server": "webpack-dev-server --open"
+    "server": "webpack-dev-server --open",
+    "testBuild": "webpack --config webpack.config.js"
   },
   "author": "Jason",
   "license": "ISC",

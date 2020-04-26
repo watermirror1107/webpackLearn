@@ -34,12 +34,13 @@ module.exports = {
 		historyApiFallback: true,//不跳转
 		inline: true,//自动刷新
 		hot: true,//热更
+		open:true//启动后自动打开浏览器
 	},
 	//取消提示
 	performance: {
 		hints: false,
 	},
-	//遇到webpack不试别的模块用loader
+	//遇到webpack不识别的模块用loader
 	module: {
 		rules: [
 			{
@@ -61,18 +62,18 @@ module.exports = {
 				// loader: 'style-loader!css-loader?modules!less-loader!postcss-loader',//简写
 				// !感叹号是分割符，表示两个工具都参与处理。
 				// ?问号，其实跟url的问号一样，就是后面要跟参数的意思。
-				//注意顺序style css最后才是Less不然会报错
-			},
+				//注意顺序loader的顺序，顺序是从右到左；css最后才是Less不然会报错
+			}
 		],
 	},
 	//插件
 	plugins: [
 		new ExtractTextPlugin({
-			filename: 'css/style.css',
+			filename: 'css/style.[contentHash:8].css',
 			allChunks: true,
 		}),//把css拿出来单独引入
 		new webpack.BannerPlugin('头皮发麻'),//在打包后的js头部加入注释
-		//如果是多入口单页面输出只要一个htmlwebapckplugin就够了
+		//如果是多入口单页面输出只要一个htmlwebapckplugin就够了，多个页面多个输出就需要多个htmlwebpackplugin
 		new HtmlWebpackPlugin({   //new 一个这个插件的实例，并传入相关的参数
 			template: __dirname + '/public/index.html', //生成页面时候需要的模板页面
 			minify: {

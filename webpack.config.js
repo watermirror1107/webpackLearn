@@ -3,14 +3,14 @@ const path = require('path');
 //extract-text-webpack-plugin插件可以吧打包在js里面的css抽出来单独引用
 //mini-css-extract-plugin是extract-text-webpack-plugin升级版
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
-//压缩css用于webpack4以上版本
+//压缩css用于webpack4以上版本 optimize-css-assets-webpack-plugin压缩css
 var OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 //页面模板哈希值引入插件
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 //清除多余哈希值打包出来的文件
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 
-//optimize-css-assets-webpack-plugin压缩css
+
 
 function resolve(dir) {
 	return path.join(__dirname, '..', dir);
@@ -20,7 +20,7 @@ module.exports = {
 	//环境
 	mode: 'production',//process.env.NODE_ENV === 'production'
 	//调试工具
-	devtool: 'eval-source-map',
+	devtool: 'eval-source-map',//开启source-map
 	entry: {
 		first: __dirname + '/app/main.js',
 		second: __dirname + '/app/main2.js',
@@ -34,7 +34,7 @@ module.exports = {
 	//webpack的服务器
 	devServer: {
 		port: 3000,
-		contentBase: './public',//本地服务i其所加载的页面所在的目录
+		contentBase: './public',//本地服务其所加载的页面所在的目录
 		historyApiFallback: true,//不跳转
 		inline: true,//自动刷新
 		hot: true,//热更
@@ -43,7 +43,7 @@ module.exports = {
 	performance: {
 		hints: false,
 	},
-	//遇到webpack不试别的模块用loader
+	//遇到webpack不识别的模块用loader
 	module: {
 		rules: [
 			{
@@ -87,7 +87,8 @@ module.exports = {
 		new ExtractTextPlugin({
 			filename: 'css/style.css',
 			allChunks: true,
-		}),//把css拿出来单独引入,不然CSS就会被写入头部的style标签里面
+		}),
+		// //把css拿出来单独引入,不然CSS就会被写入头部的style标签里面
 		new OptimizeCssAssetsPlugin({ //压缩CSS
 			assetNameRegExp: /\.css$/g,
 			cssProcessor: require('cssnano'),
@@ -96,7 +97,7 @@ module.exports = {
 		}),
 		new webpack.BannerPlugin('头皮发麻'),//在打包后的js头部加入注释
 		new HtmlWebpackPlugin({
-			inject: false,
+			inject: true,//不开的话CSS会引入失败
 			template: __dirname + '/public/template.html',
 			minify: {
 				removeComments: true,
