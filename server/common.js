@@ -16,9 +16,11 @@ function resolve(dir) {
     return path.join(__dirname, '..', dir);
 }
 
+__dirname=__dirname+'/../';//注意路径
+
 module.exports = {
     //环境
-    mode: process.env.NODE_ENV === 'production'?'production':'development',//修改场景
+    mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',//修改场景
     entry: {
         first: __dirname + '/app/main.js',
         second: ['webpack-dev-server/client?http://localhost:3000', 'webpack/hot/dev-server', __dirname + '/app/main2.js'],
@@ -29,7 +31,6 @@ module.exports = {
         filename: 'js/[name]-[hash].js',
         publicPath: '',
     },
-
     //取消提示
     performance: {
         hints: false,
@@ -83,7 +84,6 @@ module.exports = {
             threshold: 10,//只处理比这个值大的资源。按字节计算
             minRatio: 0.8//只有压缩率比这个值小的资源才会被处理（minRatio = 压缩大小 / 原始大小）
         }),
-
         new ExtractTextPlugin({
             filename: 'css/style.css',
             allChunks: true,

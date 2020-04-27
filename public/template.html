@@ -11,9 +11,5 @@
 </head>
 <body>
 <div id="app"></div>
-<!--排除上面以-->
-<% for ( var k in htmlWebpackPlugin.files.chunks ) { %>
-<script src="<%= htmlWebpackPlugin.files.chunks[k].entry %>"></script>
-<% } %>
 </body>
 </html>

@@ -1,4 +1,5 @@
 function we() {
-	console.log('welcome')
+    console.log('welcome');
 }
-export default we
+
+module.exports = we;

@@ -1,4 +1,4 @@
 //引入CSS
-import './index.less';
+require('./index.less');
 const greeter = require('./Greeter.js');
 greeter();
