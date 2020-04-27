@@ -8,19 +8,12 @@
     <title>Document</title>
     <!--不想把script通过外链引入可以这么写-->
     <!--下面是对chunk:first的js入口文件以行内的形式写入页面，而不是外链引入，可以提高这个脚本的加载速度和运行速度，在htmlwebpackpugin里面一定要把inject关闭，不然打包后body里面还是会有first.js-->
-    <script type="text/javascript">
-			<%=
-				compilation.assets[htmlWebpackPlugin.files.chunks.first.entry.substr(htmlWebpackPlugin.files.publicPath.length)].source()
-            %>
-    </script>
 </head>
 <body>
 <div id="app"></div>
 <!--排除上面以-->
-    <% for ( var k in htmlWebpackPlugin.files.chunks ) { %>
-    <% if ( k !== 'first' ) { %>
+<% for ( var k in htmlWebpackPlugin.files.chunks ) { %>
 <script src="<%= htmlWebpackPlugin.files.chunks[k].entry %>"></script>
-    <% } %>
-    <% } %>
+<% } %>
 </body>
 </html>
