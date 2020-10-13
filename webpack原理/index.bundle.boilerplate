@@ -1,0 +1,19 @@
+(function () {
+    var moduleList = [
+        /*template-module-list*/
+    ];
+    //模块直接的依赖映射列表
+    var moduleDepIdList = [
+        /*template-module-dep-list*/
+    ];
+
+    function require(id, parentId) {
+        var currentModuleId = parentId !== undefined ? moduleDepIdList[parentId][id] : id;
+        var module = {exports: {}};
+        var moduleFunc = moduleList[currentModuleId];
+        //这里的闭包是为了让父模块里面的子模块找到依赖对照列表moduleDepIdList里面的映射关系
+        moduleFunc((id) => require(id, currentModuleId), module, module.exports)
+        return module.exports;
+    }
+    require(0)
+})()

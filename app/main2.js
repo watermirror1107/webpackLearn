@@ -1,4 +1,4 @@
-const we = require('./welcome');
+import we from './welcome';
 const html = require('./common.html');
 we()
 function render() {

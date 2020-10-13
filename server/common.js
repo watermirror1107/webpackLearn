@@ -23,7 +23,7 @@ module.exports = {
     mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',//修改场景
     entry: {
         first: __dirname + '/app/main.js',
-        second: ['webpack-dev-server/client?http://localhost:3000', 'webpack/hot/dev-server', __dirname + '/app/main2.js'],
+        second:  __dirname + '/app/main2.js',
         third: __dirname + '/app/main3.js',
     },//入口
     output: {
@@ -95,7 +95,7 @@ module.exports = {
             cssProcessorOptions: {safe: true, discardComments: {removeAll: true}},
             canPrint: true,
         }),
-        new webpack.BannerPlugin('头皮发麻'),//在打包后的js头部加入注释
+        //new webpack.BannerPlugin('头皮发麻'),//在打包后的js头部加入注释
         new HtmlWebpackPlugin({
             inject: true,//是否开启自动引入打包后的资源，如果关闭需要手动引入
             //手动引入方式,不要同时开启inject不然会造成双重引入
