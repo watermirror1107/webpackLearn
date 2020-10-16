@@ -9,7 +9,7 @@
             module.exports = new Date().getTime()
         }
     ];
-    //模块直接的依赖映射列表
+    //模块直接的依赖映射列表，通过AST解析代码找到需要引入依赖的语句，递归
     var moduleDepIdList = [
         {'./moduleA': 1},
         {}
